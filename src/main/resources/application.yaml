@@ -1,0 +1,24 @@
+spring:
+  jpa:
+    database: POSTGRESQL
+    #database-platform: org.hibernate.community.dialect.PostgreSQL81Dialect
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        schema_update:
+          unique_constraint_strategy: RECREATE_QUIETLY
+    hibernate:
+      ddl-auto: update
+  datasource:
+      driver-class-name: org.postgresql.Driver
+      username: postgres
+      password: Admin035
+      url: jdbc:postgresql://localhost:5432/task
+telegram:
+  bot:
+    name: JDFREE12NASANickFLJ
+    token: 6165467966:AAFy8genmyeNRa_VlVqv7p3MFi0zWItmRLw
+    uri: https://api.telegram.org/bot{token}/getFile?file_id={fileId}
+    storage: https://api.telegram.org/file/bot{token}/{filePath}
+
