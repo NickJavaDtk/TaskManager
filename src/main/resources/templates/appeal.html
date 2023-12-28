@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link  rel="stylesheet"  th:href="@{/styles/css/bootstrap.min.css}">
+</head>
+
+<body>
+    <div class="container pt-3" >
+        <div class="row gx-5">
+    
+            <div class="d-flex bd-highlight mb-3">
+                <div class="p-2 bd-highlight">
+                    <a class="btn btn-primary" type="button" title="На главную" href="/hello"><img src="/images/home.png" width="22" height="22">
+    
+                    </a>
+                </div>
+    
+                <div class="p-2 bd-highlight">
+                    <a  class="btn btn-primary" role="button" href="/tasklist">
+                           Задачи
+                          </a>
+                </div>
+                <div class="p-2 bd-highlight">
+                    <a class="btn btn-primary" role="button" href="/appeal">
+                           Обращения
+                        <span class="badge badge-light">3</span>
+                        </a>
+                </div>
+    
+                <div class="ms-auto p-2 bd-highlight">
+                      <a class="btn btn-primary" role="button" href="/admin">
+                           Администрирование
+                      </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container pt-3">
+        <div class="row gx-5">
+            <div class="input-group mb-3">
+                <a class="btn btn-primary" role="button" href="/editAppeal">Редактировать</a>
+            </div>
+        </div>
+        <div class="row gx-5"></div>
+        <div class="row gx-5" >
+            <table class="table table-hover">
+                <thead class="table-info">
+                    <tr>
+                        <th scope="col">Номер обращения</th>
+                        <th scope="col">Дата создания</th>
+                        <th scope="col">От кого</th>
+                        <th scope="col">Сообщение</th>
+                    </tr>
+
+                </thead>
+                <tr th:each="message : ${messagelist}">
+                    <td th:text="${message.id}">Номер обращения</td>
+                    <td th:text="${message.createDate}">Дата создания</td>
+                    <td th:text="${message.user.firstName}">От кого</td>
+                    <td th:text="${message.textDocuments.get(0).message}"></td>
+
+                </tr>
+
+            </table>
+        </div>
+
+    </div>
+    <script defer src="static/js/bootstrap.min.js"></script>
+</body>
+</html>

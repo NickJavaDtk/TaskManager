@@ -1,14 +1,12 @@
 package ru.webDevelop.telegram.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Getter
@@ -24,6 +22,8 @@ public class UserTelegram {
     @CreationTimestamp
     private LocalDateTime dateCreation;
     private String firstName;
-    private String friendlyName;
+    private String lastName;
+    @OneToMany (mappedBy = "user")
+    private List<MessageDocument> messageDocuments;
 
 }

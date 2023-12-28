@@ -1,28 +1,33 @@
 package ru.webDevelop.telegram.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+
 @Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "message")
+@Table(name = "inputMessage")
 public class MessageDocument {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
+    @CreationTimestamp
+    private LocalDateTime createDate;
+    private Long chatId;
+    @ManyToOne
     private UserTelegram user;
-    @OneToMany(mappedBy = "documentText")
+    @OneToMany(mappedBy = "documentText", fetch = FetchType.EAGER)
     private List<TextDocument> textDocuments;
-    @OneToMany(mappedBy = "document")
+    @OneToMany(mappedBy = "document", fetch = FetchType.EAGER)
     private List<PhotoDocument> listDocuments;
+    private Boolean isActive;
 }

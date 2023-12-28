@@ -1,5 +1,6 @@
 package ru.webDevelop.telegram.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -22,8 +23,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class FileServiceImpl implements FileService {
     private final BinaryContentDAO contentDAO;
     private final MessageDocumentDAO documentDAO;
@@ -31,7 +34,7 @@ public class FileServiceImpl implements FileService {
     private final TextDocumentDAO textDAO;
     private final UserTelegramDAO userTelegramDAO;
 
-    private final String SALUTE = "Здравствуйте {name} ваш вопрос";
+    private final String SALUTE = "Здравствуйте {name}";
     private final String IMAGINE = "Вы мне не знакомы. Выберите команду /name и представьтесь пожалуйста как к вам можно обращаться";
 
     @Autowired
@@ -59,9 +62,9 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public TextDocument getTextDocument(Message message) {
+        String text = message.getText( ) != null ? message.getText( ) : null;
         TextDocument textDocument = TextDocument.builder()
-                .text(message.getText( ) != null ? message.getText( ) : null)
-                .message(message.getCaption( ) != null ? message.getCaption( ) : null)
+                .message(text != null ? text : message.getCaption( ))
                 .chatId(message.getChatId( ))
                 .build();
         return textDAO.save(textDocument);
@@ -85,6 +88,69 @@ public class FileServiceImpl implements FileService {
         }
         messageDocument.setUser(user);
         return messageDocument;
+    }
+
+    public MessageDocument createNewMessageDocument(Message message, UserTelegram userTelegram) {
+        List<TextDocument> documentList = new ArrayList<>();
+        List<PhotoDocument> photoList = new ArrayList<>(  );
+        MessageDocument document = new MessageDocument();
+        document.setChatId(message.getChatId( ));
+        document.setUser(userTelegram);
+        document.setTextDocuments(documentList);
+        document.setListDocuments(photoList);
+        document.setIsActive(true);
+//        MessageDocument document = MessageDocument.builder( )
+//                .chatId(message.getChatId( ))
+//                .user(userTelegram)
+//                .build( );
+        return documentDAO.save(document);
+    }
+
+    public void addMessageDocumentTextDocument(Long messageDocumentId, Message message) {
+        TextDocument textDocument = getTextDocument(message);
+        MessageDocument documentTransient = addListTextDocument(messageDocumentId, textDocument);
+        textDocument.setDocumentText(documentTransient);
+        textDAO.save(textDocument);
+    }
+
+    public void addMessageDocumentPhotoDocument(Long messageDocumentId, Message message) {
+        PhotoDocument photoDocument = getPhotoDocument(message);
+        MessageDocument documentTransient = addListPhotoDocument(messageDocumentId, photoDocument);
+        photoDocument.setDocument(documentTransient);
+        photoDAO.save(photoDocument);
+    }
+
+    public void closeMessageDocument(MessageDocument document) {
+        document.setIsActive(false);
+        documentDAO.save(document);
+    }
+
+    private MessageDocument getDAOMessageDocument(Long id) {
+        return documentDAO.findMessageDocumentById(id);
+    }
+
+    private MessageDocument addListTextDocument(Long id, TextDocument textDocument) {
+        MessageDocument document = getDAOMessageDocument(id);
+        List<TextDocument> documentList = document.getTextDocuments();
+        if (documentList == null) {
+            documentList = new ArrayList<>(  );
+            documentList.add(textDocument);
+        } else {
+            documentList.add(textDocument);
+        }
+      return  documentDAO.save(document);
+    }
+
+    private MessageDocument addListPhotoDocument(Long id, PhotoDocument photoDocument) {
+        MessageDocument document = getDAOMessageDocument(id);
+        List<PhotoDocument> photoList = document.getListDocuments();
+        if (photoList == null) {
+            photoList = new ArrayList<>();
+            photoList.add(photoDocument);
+        } else {
+            photoList.add(photoDocument);
+        }
+       return  documentDAO.save(document);
     }
 
     @Override
@@ -166,7 +232,8 @@ public class FileServiceImpl implements FileService {
         Long userId = message.getFrom().getId();
         UserTelegram userTelegram = userTelegramDAO.findUserTelegramByTelegramUserId(userId);
         if (userTelegram == null) {
-            getFriendlyNoName(message);
+            //getFriendlyNoName(message);
+            saluteName(message);
             UserTelegram transientUser = getFriendlyNoNameInput(message);
             return userTelegramDAO.save(transientUser);
         } else {
@@ -177,7 +244,7 @@ public class FileServiceImpl implements FileService {
     }
 
     private void saluteName(Message message) {
-        String name = message.getText();
+        String name = message.getFrom().getFirstName();
         String senderText = SALUTE.replace("{name}", name);
         SendMessage sendMessage = new SendMessage(String.valueOf(message.getChatId()), senderText );
         try {
@@ -187,30 +254,41 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    private void getFriendlyNoName(Message message ) {
-        SendMessage sendMessage = new SendMessage(String.valueOf(message.getChatId()), IMAGINE );
-        try {
-            telegramBotTask.execute(sendMessage);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    private void getFriendlyNoName(Message message ) {
+//        SendMessage sendMessage = new SendMessage(String.valueOf(message.getChatId()), IMAGINE );
+//        try {
+//            telegramBotTask.execute(sendMessage);
+//        } catch (TelegramApiException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     private UserTelegram getFriendlyNoNameInput(Message message) {
-        String name = message.getText();
-        String senderText = SALUTE.replace("{name}", name);
-        SendMessage sendMessage = new SendMessage(String.valueOf(message.getChatId()), senderText );
-        try {
-            telegramBotTask.execute(sendMessage);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-        }
+//        String name = message.getText();
+//        String senderText = SALUTE.replace("{name}", name);
+//        SendMessage sendMessage = new SendMessage(String.valueOf(message.getChatId()), senderText );
+//        try {
+//            telegramBotTask.execute(sendMessage);
+//        } catch (TelegramApiException e) {
+//            throw new RuntimeException(e);
+//        }
         return UserTelegram.builder( )
                 .telegramUserId(message.getFrom().getId())
-                .firstName(message.getChat().getFirstName())
-                .friendlyName(name)
+                .firstName(message.getFrom().getFirstName())
+                .lastName(message.getFrom().getLastName())
                 .build( );
     }
+
+    public MessageDocument getMessageDocument(Long id) {
+        return documentDAO.findMessageDocumentByChatIdAndIsActiveTrue(id);
+    }
+
+    public List<MessageDocument> findAllMessageDocument() {
+        List<MessageDocument> document = Optional.of(documentDAO.findAll()).orElse(null);
+        return document;
+    }
+
+
 
 
 }
