@@ -19,7 +19,7 @@ public class AppealService {
         this.appealRepository = appealRepository;
     }
 
-    public List<Appeal> findAll() {
+    public List<Appeal> findAllExecutor() {
         Iterable<Appeal> iterList = appealRepository.findAll();
         List<Appeal> appealList = new ArrayList<>();
         for (Iterator<Appeal> it = iterList.iterator( ); it.hasNext( ); ) {

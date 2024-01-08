@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <link rel="stylesheet" th:href="@{/styles/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <div class="container pt-3">
+        <div class="row gx-5">
+
+            <div class="d-flex bd-highlight mb-3">
+                <div class="p-2 bd-highlight">
+                    <a class="btn btn-primary" type="button" title="На главную" href="/hello"><img src="/images/home.png"
+                                                                                                   width="22" height="22">
+
+                    </a>
+                </div>
+
+                <div class="p-2 bd-highlight">
+                    <a class="btn btn-primary" role="button" href="/tasklist">
+                        Задачи
+                    </a>
+                </div>
+                <div class="p-2 bd-highlight">
+                    <a class="btn btn-primary" role="button" href="/appeal">
+                        Обращения
+                        <span class="badge badge-light">3</span>
+                    </a>
+                </div>
+
+                <div class="ms-auto p-2 bd-highlight">
+                    <a class="btn btn-primary" role="button" href="/admin">
+                        Администрирование
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container pt-3">
+      <div class="row gx-5">
+          <ul class="nav nav-tabs">
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Настройки</a>
+                  <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#BD">Подключение к БД</a></li>
+                      <li><hr class="dropdown-devider"></li>
+                      <li><a class="dropdown-item" href="#Bot">Подключение к Боту</a></li>
+                  </ul>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="#users">Ответственные</a>
+              </li>
+          </ul>
+      </div>
+      <p><a name="BD"></a>
+          <h3>Настройка подключения к БД PostgeSQL</h3>
+        <form class="row g-3" action="">
+            <div class="col-md-10">
+                <label for="stringConnect" class="form-label">Строка подключения</label>
+                <input type="text" class="form-control" id="stringConnect" value="" th:value="${connectBD.get(0)}" name="uri">
+            </div>
+            <div class="col-md-6">
+                <label for="loginBD" class="form-label">Логин</label>
+                <input type="text" class="form-control" id="loginBD" value="" th:value="${connectBD.get(1)}" name="username">
+            </div>
+            <div class="col-md-6">
+                <label for="passwordBD" class="form-label">Пароль</label>
+                <input type="text" class="form-control" id="passwordBD" value="" th:value="${connectBD.get(2)}" name="password">
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+      </p>
+        <p><a name="Bot"></a>
+        <h3>Настройка подключения к Telegram боту</h3>
+        <form class="row g-3" action="">
+            <div class="col-md-6">
+                <label for="loginBot" class="form-label">Имя Telegram бота</label>
+                <input type="text" class="form-control" id="loginBot" value="" th:value="${connectBot.get(0)}" name="name">
+            </div>
+            <div class="col-md-12">
+                <label for="tokenBot" class="form-label">Токен Telegram бота</label>
+                <input type="text" class="form-control" id="tokenBot" value="" th:value="${connectBot.get(1)}" name="token">
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+        </p>
+        </p>
+        <p><a name="users"></a>
+        <h3>Список пользователей (ответственных)</h3>
+       <!--  <form method="POST" class="row g-3" action="@{/register}">
+            <div class="col-md-6">
+                <label for="loginUser" class="form-label">Логин</label>
+                <input type="text" class="form-control" id="loginUser">
+            </div>
+            <div class="col-md-6">
+                <label for="passwordUser" class="form-label">Пароль</label>
+                <input type="password" class="form-control" id="passwordUser">
+            </div>
+            <div class="col-md-12">
+                <label for="fioUser" class="form-label">ФИО ответственного</label>
+                <input type="text" class="form-control" id="fioUser">
+            </div>
+            <div class="col-md-12">
+                <label for="current" class="form-label">Должность</label>
+                <input type="text" class="form-control" id="current">
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form> -->
+        </p>
+    </div>
+
+    <script defer src="/js/bootstrap.bundle.js"></script>
+</body>
+</html>

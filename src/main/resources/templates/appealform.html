@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+  <link  rel="stylesheet"  th:href="@{/styles/css/bootstrap.min.css}">
+  <link rel="stylesheet" href="/static/css/main.css">
+  <!-- <link rel="stylesheet" href="D:/Users/TaskTest/webDevelop/src/main/resources/static/css"/>-->
+</head>
+<body>
+<div class="container pt-3" >
+  <div class="row gx-5">
+    <div class="d-flex bd-highlight mb-3">
+      <div class="p-2 bd-highlight">
+        <a class="btn btn-primary" type="button" title="На главную" href="/hello"><img src="/images/home.png" width="22" height="22">
+
+        </a>
+      </div>
+
+      <div class="p-2 bd-highlight">
+        <a  class="btn btn-primary" role="button" href="/tasklist">
+          Задачи
+        </a>
+      </div>
+      <div class="p-2 bd-highlight">
+        <a class="btn btn-primary" role="button" href="/appeal">
+          Обращения
+          <span class="badge badge-light">3</span>
+        </a>
+      </div>
+
+      <div class="ms-auto p-2 bd-highlight">
+        <a class="btn btn-primary" role="button" href="/admin">
+          Администрирование
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<form class="row g-3">
+  <div class="col-md-2"> 
+    <label for="idAppeal" class="form-label">ID обращения</label>
+    <input type="text" class="form-control" id="idAppeal" th:value="${message.id}" disabled readonly>
+  </div>
+  <div class="col-md-5">
+    <label for="dateAppeal" class="form-label">Дата создания</label>
+    <input type="text" class="form-control" id="dateAppeal" th:value="${message.createDate}}" disabled readonly>
+  </div>
+  <div class="col-md-5">
+    <label for="fromAppeal" class="form-label">От кого</label>
+    <input type="text" class="form-control" id="fromAppeal" th:value="${message.user.firstName}}" disabled readonly>
+  </div>
+  <div class="col-md-5">
+    <label for="textAppeal" class="form-label">Текст обращения</label>
+    <input type="text" class="form-control" id="textAppeal" th:value="${message.createDate}}" disabled readonly>
+  </div>
+  <!-- <div class="col-md-8">
+    <label for="executorAppeal" class="form-label">Ответственный</label>
+    <input type="text" class="form-control" id="executorAppeal" th:value="${message.createDate}}" disabled readonly>
+  </div> -->
+  <div class="col-md-10">
+    <label for="executorAppeal" class="form-label">Ответственный</label>
+    <select class="form-select" id="executorAppeal" multiple aria-label="multiple select">
+      <div th:each="executor : ${executors}">
+        <option th:text="executor.name"></option>
+      </div>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Сохранить</button>
+  
+</form>
+<script defer src="static/js/bootstrap.min.js"></script>
+</body>
+</html>

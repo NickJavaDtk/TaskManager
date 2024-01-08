@@ -24,7 +24,8 @@ public class MessageAppealController {
     private void addMessageListToModel(Model model) {
         List<MessageDocument> messageList = fileService.findAllMessageDocument();
 
-        model.addAttribute("messagelist", messageList);
+        model.addAttribute("messageList", messageList);
+
     }
 
     @GetMapping

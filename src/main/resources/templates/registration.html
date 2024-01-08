@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+  <link rel="stylesheet" th:href="@{/styles/css/bootstrap.min.css}">
+  <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+  <div style="padding: 50px;"></div>
+  <div class="container" style="width: 50%;"> <!-- background: #ccc;" -->
+    <div class="row justify-content-md-center">
+      <!-- <div class="col-md-auto"> -->
+        <div class="col-md-10">
+          <h3>Регистрация пользователя</h3>
+        </div>
+        <form method="POST" class="row g-3" th:action="@{/register}" th:object="${form}">
+          <div class="col-md-5">
+            <label for="username" class="form-label">Логин</label>
+            <input type="text" class="form-control" id="username" th:field="*{username}">
+            <span class="validationError" th:if="${#fields.hasErrors('username') }" th:errors="*{username}" style="color: red;">
+              UserName Error
+            </span>
+
+          </div>
+          <div class="col-md-5">
+            <label for="password" class="form-label">Пароль</label>
+            <input type="password" class="form-control" id="password" th:field="*{password}">
+            <span class="validationError" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: red;">
+              Password Error
+            </span>
+          </div>
+          <div class="col-md-10">
+            <label for="name" class="form-label">ФИО ответственного</label>
+            <input type="text" class="form-control" id="name" th:field="*{name}">
+            <span class="validationError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red;">
+              Name Error
+            </span>
+          </div>
+          <div class="col-md-10">
+            <label for="position" class="form-label">Должность</label>
+            <input type="text" class="form-control" id="position" th:field="*{position}">
+            <!-- <span class="validationError" th:if="${#fields.hasErrors('position')}" th:errors="*{position}" style="color: red;"></span> -->
+          </div>
+          <div class="col-md-10">
+            <div class="d-grid gap-2 col-5 mx-auto">
+              <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+          </div>
+        </form>
+      <!-- </div> -->
+    </div>
+  </div>
+
+<script defer src="/js/bootstrap.bundle.js"></script>
+</body>
+</html>

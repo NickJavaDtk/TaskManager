@@ -57,8 +57,8 @@
                     </tr>
 
                 </thead>
-                <tr th:each="message : ${messagelist}">
-                    <td th:text="${message.id}">Номер обращения</td>
+                <tr th:each="message : ${messageList}">
+                    <td><a th:href="@{${message.id}}"><p th:text="${message.id}"></p></a></td>
                     <td th:text="${message.createDate}">Дата создания</td>
                     <td th:text="${message.user.firstName}">От кого</td>
                     <td th:text="${message.textDocuments.get(0).message}"></td>
